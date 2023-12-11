@@ -1,0 +1,48 @@
+:root {
+  font-family: "Arial";
+  box-sizing: border-box;
+}
+
+.container {
+  width: 80vw;
+  height: 90vh;
+  border: 1px grey solid;
+  margin: 0 auto;
+  margin-top: 5rem;
+  border-radius: 2rem;
+
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+
+  position: relative;
+}
+
+/* ==================== Header =================== */
+
+header {
+  background-color: rgb(233, 233, 233);
+  grid-row: 1/2;
+  grid-column: 1/7;
+
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+header > h1 {
+  padding-left: 3rem;
+
+  font-size: 3rem;
+}
+
+header > svg {
+  height: 3rem;
+  width: auto;
+  margin-left: 1rem;
+
+  position: relative;
+  bottom: 0.2rem;
+}
+
+/* =================== Sidebar ====================*/

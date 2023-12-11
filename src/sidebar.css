@@ -1,0 +1,97 @@
+.sidebar {
+  background-color: rgb(205, 205, 205);
+
+  grid-row: 2/11;
+  grid-column: 1/2;
+
+  position: relative;
+}
+
+.projectDivide {
+  background-color: rgb(192, 192, 192);
+  display: block;
+  width: 100%;
+  height: 0.1rem;
+}
+
+.standardProjects > li {
+  list-style: none;
+  display: block;
+  width: 60%;
+
+  padding: 0.2rem;
+  padding-left: 2rem;
+  border-radius: 1rem;
+
+  font-size: 1.5rem;
+  margin: 1rem 0;
+  background-color: rgb(213, 213, 213);
+}
+
+.addProject {
+  border-radius: 100%;
+  background-color: rgb(123, 123, 123);
+  border: none;
+  width: 1.6rem;
+  height: 1.6rem;
+  font-size: 1.3rem;
+  color: rgb(225, 225, 225);
+
+  margin-right: 0.5rem;
+  margin-left: -2rem;
+}
+
+.customProjects > .project {
+  list-style: none;
+  display: flex;
+  width: 60%;
+
+  padding: 0.4rem;
+  padding-left: 2rem;
+  border-radius: 1rem;
+
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin: 1rem 0;
+  background-color: rgb(213, 213, 213);
+
+  justify-content: flex-start;
+  align-items: center;
+}
+.customProjects > .project > p {
+  margin: 0;
+  margin-left: 0.5rem;
+}
+
+.customProjects > .project > span {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 100%;
+  display: inline-block;
+  background-color: red;
+  margin-left: -1.3rem;
+}
+
+.customProjects > div {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.customProjects > div > p {
+  position: relative;
+}
+
+.addTask {
+  border-radius: 100%;
+  background-color: rgb(123, 123, 123);
+  border: none;
+  width: 4rem;
+  height: 4rem;
+  font-size: 2.8rem;
+  color: rgb(225, 225, 225);
+
+  bottom: 0.5rem;
+  left: 0.5rem;
+
+  position: absolute;
+}
