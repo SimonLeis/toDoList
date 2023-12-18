@@ -1,12 +1,4 @@
-import { SassColor } from "sass";
-
 const Pubsub = require("pubsub.js");
-//RECIEVES
-//task-data
-
-//DOES
-//creates new task wiht .name as identifier
-//or if prevName is not "" than send clarify it as a set item)
 
 const taskCreator = {
   init: function (newTask) {
@@ -26,12 +18,12 @@ const taskCreator = {
       project: taskObject.project,
       date: newDate,
     };
-    console.log(newTask);
+    this.sendNewCreatedTask(newTask);
+  },
+  sendNewCreatedTask: function (newTask) {
+    Pubsub.publish("newCreatedTask", [newTask]);
   },
 };
-
-//SEND
-// task object to list-handler
 
 Pubsub.subscribe("newTask", function (newTask) {
   taskCreator.init(newTask);

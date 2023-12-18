@@ -9,6 +9,7 @@ import projectRender from "./modules/DOMManipulator/projectRender";
 import projectListHandler from "./modules/projectListHandler";
 import taskCreateRender from "./modules/DOMManipulator/taskCreateRender.js";
 import taskCreator from "./modules/taskCreator.js";
+import projectCreateRender from "./modules/DOMManipulator/projectCreateRender.js";
 
 const Pubsub = require("pubsub.js");
 

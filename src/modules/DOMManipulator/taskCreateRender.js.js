@@ -16,6 +16,7 @@ const taskCreateRender = {
   eventBindings: function () {
     this.addTask();
     this.getNewTaskData();
+    this.closePopUpWindow();
   },
   addTask: function (e) {
     document.addEventListener("click", (e) => {
@@ -186,6 +187,15 @@ const taskCreateRender = {
   },
 
   //funtion that can close the pop up
+  closePopUpWindow: function () {
+    document.addEventListener("click", (e) => {
+      if (e.target.classList.contains("newTaskSubmit")) {
+        document
+          .querySelector(".container")
+          .removeChild(document.querySelector(".newTaskContainer"));
+      }
+    });
+  },
 };
 
 export default taskCreateRender.init();

@@ -14,6 +14,7 @@ const taskRender = {
   },
   eventBindings: function (TaskList) {
     this.createTaskList(TaskList);
+    this.deleteTask();
   },
   createSingleTask: function (task) {
     const taskContainer = document.createElement("div");
@@ -109,6 +110,14 @@ const taskRender = {
   },
   getNewTask: function () {
     Pubsub.publish("taskListNeeded", []);
+  },
+  deleteTask: function () {
+    document.addEventListener("click", (e) => {
+      if (e.target.classList.contains("taskDelete")) {
+        const taskName = e.target.parentNode.children[1].innerText;
+        Pubsub.publish("deleteTask", [taskName]);
+      }
+    });
   },
 };
 

@@ -1,45 +1,7 @@
-import { publish } from "pubsub-js";
-
 const Pubsub = require("pubsub.js");
 
-//RECIEVES
-//new Task data
-//edit Task data
-
-//DOES
-//add new Tasks to the list
-//edit tasks in the List and sets new Values
-//sort list based on priority and ( dates (secondary))
-
 const taskListHandler = {
-  // first manually filled list
-
-  taskList: [
-    {
-      name: "test general",
-      color: "blue",
-      date: "24.12.2023",
-      notes: "dsaljfldskjaf",
-      project: "",
-      priority: 1,
-    },
-    {
-      name: "test today",
-      color: "red",
-      date: "17.12.2023",
-      notes: "dsaljfldskjaf",
-      project: "",
-      priority: 2,
-    },
-    {
-      name: "test personal",
-      color: "green",
-      date: "16.12.2023",
-      notes: "dsaljfldskjaf",
-      project: "Personal",
-      priority: 2,
-    },
-  ],
+  taskList: [],
 
   init: function (task) {
     if (task.prevName == undefined) {
@@ -47,7 +9,6 @@ const taskListHandler = {
     } else if (task.prevName !== undefined) {
       this.editTask(task);
     }
-    this.provideList();
   },
 
   // edits task based on previus name and triggers the reordering function
@@ -91,6 +52,17 @@ const taskListHandler = {
   publishList: function () {
     Pubsub.publish("newTaskList", [this.taskList]);
   },
+  deleteTask: function (taskName) {
+    const taskToDelete = this.taskList.filter((element) => {
+      if ((element.name = taskName)) {
+        return element;
+      }
+    });
+
+    this.taskList.splice(this.taskList.indexOf(taskToDelete, 1));
+
+    this.publishList();
+  },
 };
 
 // as soon as it recieves new data it will push it under the rules into the array
@@ -103,6 +75,10 @@ Pubsub.subscribe("newCreatedTask", function (task) {
 
 Pubsub.subscribe("taskListNeeded", function () {
   taskListHandler.publishList();
+});
+
+Pubsub.subscribe("deleteTask", function (taskName) {
+  taskListHandler.deleteTask(taskName);
 });
 
 export default taskListHandler.init;
