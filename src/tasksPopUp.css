@@ -109,45 +109,19 @@
   justify-content: space-around;
 }
 
-.newTaskPriority {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+.taskPriority {
+  height: 3rem;
+  width: 15rem;
 
+  border-radius: 0.5rem;
   font-size: 1.3rem;
-}
 
-.newTaskPriority > div {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: -0.7rem;
-}
+  text-align: center;
 
-.newTaskPriority > div > button {
-  height: 1.9rem;
-  width: 4.5rem;
+  border: 2px solid rgba(0, 0, 0, 0.186);
 
-  margin: 0 0.2rem;
-  border-radius: 0.3rem;
-
-  font-size: 1rem;
-}
-
-.highPrio {
-  border: 3px solid rgba(255, 0, 0, 0.531);
-  background-color: rgba(255, 0, 0, 0.117);
-}
-
-.midPrio {
-  border: 3px solid rgba(255, 255, 0, 0.531);
-  background-color: rgba(255, 255, 0, 0.2);
-}
-
-.lowPrio {
-  border: 3px solid rgba(0, 255, 0, 0.531);
-  background-color: rgba(0, 255, 0, 0.117);
+  position: relative;
+  top: 0.75rem;
 }
 
 .newTaskProject {

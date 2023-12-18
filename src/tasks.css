@@ -33,6 +33,7 @@ main > h2 {
   align-items: center;
 
   position: relative;
+  margin-top: 1rem;
 }
 
 .taskColor {
