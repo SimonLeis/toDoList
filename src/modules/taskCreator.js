@@ -10,14 +10,29 @@ const taskCreator = {
       7
     )}.${taskObject.date.slice(0, 4)}`;
 
-    const newTask = {
-      name: taskObject.name,
-      color: taskObject.color,
-      notes: taskObject.notes,
-      priority: taskObject.priority,
-      project: taskObject.project,
-      date: newDate,
-    };
+    let newTask;
+
+    if (taskObject.prevName == undefined) {
+      newTask = {
+        name: taskObject.name,
+        color: taskObject.color,
+        notes: taskObject.notes,
+        priority: taskObject.priority,
+        project: taskObject.project,
+        date: newDate,
+      };
+    } else if (taskObject.prevName !== undefined) {
+      newTask = {
+        name: taskObject.name,
+        color: taskObject.color,
+        notes: taskObject.notes,
+        priority: taskObject.priority,
+        project: taskObject.project,
+        date: newDate,
+        prevName: taskObject.prevName,
+      };
+    }
+
     this.sendNewCreatedTask(newTask);
   },
   sendNewCreatedTask: function (newTask) {

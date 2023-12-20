@@ -25,6 +25,8 @@ Pubsub.subscribe("projectListNeeded", projectListHandler.sendNewProjectList());
 
 export default projectListHandler.init;
 
-const provideList = projectListHandler.provideList();
+const provideProjectList = projectListHandler.provideList();
 
-export { provideList };
+// provides list to solve a problem in the pub-sub.js file
+
+export { provideProjectList };

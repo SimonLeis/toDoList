@@ -5,15 +5,18 @@ import trashIcon from "../img/trash.svg";
 // RECIEVES
 //list of tasks
 const taskRender = {
+  activeProject: "",
   init: function (taskList) {
     this.cacheDOM();
-    this.eventBindings(taskList);
+    this.eventBindings();
+    this.clearTaskList();
+    this.renderTaskList(taskList);
   },
   cacheDOM: function () {
     this.taskList = document.querySelector(".taskList");
   },
-  eventBindings: function (TaskList) {
-    this.createTaskList(TaskList);
+  eventBindings: function () {
+    this.createTaskListName();
     this.deleteTask();
   },
   createSingleTask: function (task) {
@@ -48,66 +51,55 @@ const taskRender = {
     taskContainer.append(taskDate);
     taskContainer.append(taskDelete);
   },
-  createTaskList: function () {
+  createTaskListName: function () {
     document.addEventListener("click", (e) => {
-      let date = new Date();
-      let taskList;
+      // `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`
 
-      this.getNewTask();
-      Pubsub.subscribe("newTaskList", function (newTaskList) {
-        taskList = newTaskList;
-      });
+      // renders all custom projects
 
       if (e.target.classList.contains("project")) {
-        const projectName = e.target.children[1].innerText;
-        this.getNewTask();
-        Pubsub.subscribe("newTaskList", function (newTaskList) {
-          taskList = newTaskList;
-        });
-
-        document.querySelectorAll(".task").forEach((element) => {
-          element.parentNode.removeChild(element);
-        });
-
-        taskList.forEach((element) => {
-          if (element.project === projectName) {
-            this.createSingleTask(element);
-          }
-        });
-
-        // render  all tasks list
-      } else if (e.target.innerText === "All Tasks") {
-        this.getNewTask();
-        Pubsub.subscribe("newTaskList", function (newTaskList) {
-          taskList = newTaskList;
-        });
-
-        document.querySelectorAll(".task").forEach((element) => {
-          element.parentNode.removeChild(element);
-        });
-        taskList.forEach((element) => {
-          this.createSingleTask(element);
-        });
-      } else if (e.target.innerText === "Today") {
-        this.getNewTask();
-        Pubsub.subscribe("newTaskList", function (newTaskList) {
-          taskList = newTaskList;
-        });
-
-        document.querySelectorAll(".task").forEach((element) => {
-          element.parentNode.removeChild(element);
-        });
-        taskList.forEach((element) => {
-          if (
-            element.date ===
-            `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`
-          ) {
-            this.createSingleTask(element);
-          }
-        });
+        this.activeProject = e.target.children[1].innerText;
+        Pubsub.publish("taskListNeeded", []);
+      } else if (e.target.classList.contains("allProjects")) {
+        this.activeProject = "";
+        Pubsub.publish("taskListNeeded", []);
+      } else if (e.target.classList.contains("todayProjects")) {
+        this.activeProject = "todaysDate";
+        Pubsub.publish("taskListNeeded", []);
       }
+
+      // render  ""all tasks" list
+
+      // renders only tasks that are equal to todays date
     });
   },
+  renderTaskList: function (taskList) {
+    let date = new Date();
+    if (this.activeProject == "") {
+      taskList.forEach((element) => {
+        this.createSingleTask(element);
+      });
+    } else if (this.activeProject == "todaysDate") {
+      taskList.forEach((element) => {
+        if (
+          element.date ==
+          `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`
+        ) {
+          this.createSingleTask(element);
+        }
+      });
+    } else if (
+      this.activeProject !== "" &&
+      this.activeProject !== "todaysDate"
+    ) {
+      taskList.forEach((element) => {
+        if (element.project == this.activeProject) {
+          this.createSingleTask(element);
+        }
+      });
+    }
+  },
+
   getNewTask: function () {
     Pubsub.publish("taskListNeeded", []);
   },
@@ -119,14 +111,15 @@ const taskRender = {
       }
     });
   },
+  clearTaskList: function () {
+    [...document.querySelector(".taskList").children].forEach((element) => {
+      element.parentNode.removeChild(element);
+    });
+  },
 };
 
-// DOES
-//recognizes clicks on project and renders tasks in the right order that are assigned to that project
+export default taskRender.init([]);
 
-// SEND
-//nothing
-
-export default taskRender;
-
-taskRender.init();
+Pubsub.subscribe("newTaskList", function (taskList) {
+  taskRender.init(taskList);
+});

@@ -20,13 +20,15 @@ const projectCreateRenderer = {
         const colorInput = document.createElement("input");
         colorInput.setAttribute("type", "color");
         colorInput.setAttribute("name", "projectColor");
+        colorInput.classList.add("projectColorInput");
 
         const nameInput = document.createElement("input");
         nameInput.setAttribute("placeholder", "Project Name...");
         nameInput.setAttribute("type", "text");
+        nameInput.classList.add("projectNameInput");
 
         const sbmtBtn = document.createElement("button");
-        sbmtBtn.classList.add("newTaskSubmit");
+        sbmtBtn.classList.add("newProjectSubmit");
         sbmtBtn.innerText = "→";
 
         document.querySelector(".container").append(newProjectContainer);
@@ -39,13 +41,10 @@ const projectCreateRenderer = {
   },
   getProjectData: function () {
     document.addEventListener("click", (e) => {
-      if (e.target.classList.contains("newTaskSubmit")) {
+      if (e.target.classList.contains("newProjectSubmit")) {
         const newProject = {
-          name: document.querySelector(".newProjectWindow > input[type='text'")
-            .value,
-          color: document.querySelector(
-            ".newProjectWindow > input[type='color'"
-          ).value,
+          name: document.querySelector(".projectNameInput").value,
+          color: document.querySelector(".projectColorInput").value,
         };
         this.closePopUpWindow();
         this.sendNewProject(newProject);

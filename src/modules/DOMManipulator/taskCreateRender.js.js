@@ -1,21 +1,17 @@
 const Pubsub = require("pubsub.js");
 
 // gets data from projectListHandler
-import { provideList } from "../projectListHandler";
-
-// RECIEVES
-//list of tasks
-
-// DOES
-//create Pop up
+import { provideProjectList } from "../projectListHandler";
+import { provideTaskList } from "../taskListHandler";
 
 const taskCreateRender = {
+  taskPrevName: "",
   init: function () {
     this.eventBindings();
   },
   eventBindings: function () {
     this.addTask();
-    this.getNewTaskData();
+    this.getTaskData();
     this.closePopUpWindow();
   },
   addTask: function (e) {
@@ -23,18 +19,32 @@ const taskCreateRender = {
       if (e.target.classList.contains("addTask")) {
         this.createPopUpWindow({});
       } else if (e.target.classList.contains("taskEdit")) {
-        // gets data from taskList
+        const taskList = provideTaskList();
+        const taskName = e.target.parentNode.children[1].innerText;
+
+        let taskToEdit = taskList.filter((element) => {
+          if (element.name === taskName) {
+            return element;
+          }
+        });
+
+        taskToEdit = taskToEdit[0];
+        taskToEdit.prevName = taskToEdit.name;
+
+        this.createPopUpWindow(taskToEdit);
       }
     });
   },
   createPopUpWindow(task) {
     let edit = false;
 
-    // if (task.prevName !== undefined) {
-    //   edit = true;
-    // } else {
-    //   edit = false;
-    // }
+    if (task.prevName !== undefined) {
+      edit = true;
+      this.taskPrevName = task.prevName;
+    } else {
+      edit = false;
+      this.taskPrevName = "";
+    }
 
     const newTaskContainer = document.createElement("div");
     newTaskContainer.classList.add("newTaskContainer");
@@ -48,6 +58,7 @@ const taskCreateRender = {
     const colorInput = document.createElement("input");
     colorInput.setAttribute("id", "color");
     colorInput.setAttribute("type", "color");
+    colorInput.classList.add("taskColorInput");
 
     if (edit) {
       colorInput.value = task.color;
@@ -56,6 +67,7 @@ const taskCreateRender = {
     const nameInput = document.createElement("input");
     nameInput.setAttribute("placeholder", "Taskname...");
     nameInput.setAttribute("type", "text");
+    nameInput.classList.add("taskNameInput");
     if (edit) {
       nameInput.value = task.name;
     }
@@ -81,10 +93,11 @@ const taskCreateRender = {
     const taskPriorityText = document.createElement("p");
     taskPriorityText.innerText = "Task-Priority";
 
-    // make a select to select a high, mid or low priority
-
     const taskPriority = document.createElement("select");
     taskPriority.classList.add("taskPriority");
+    if (edit) {
+      taskPriority.value = task.priority;
+    }
 
     const taskPriorityHigh = document.createElement("option");
     taskPriorityHigh.setAttribute("value", "1");
@@ -101,16 +114,25 @@ const taskCreateRender = {
     taskPriorityLow.setAttribute("name", "priority");
     taskPriorityLow.innerText = "low";
 
-    const newTaskProject = document.createElement("select");
-    newTaskProject.classList.add("newTaskProject");
-    if (edit) {
-      newTaskProject.value = task.project;
-    }
-
     const optionNoProject = document.createElement("option");
     optionNoProject.setAttribute("value", "");
     optionNoProject.innerText = "No Project";
     optionNoProject.setAttribute("selected", "selected");
+
+    const newTaskProject = document.createElement("select");
+    newTaskProject.classList.add("newTaskProject");
+    if (edit) {
+      if (task.priority == "1") {
+        taskPriorityHigh.setAttribute("selected", "selected");
+        optionNoProject.removeAttribute("selected");
+      } else if (task.priority == "2") {
+        taskPriorityMid.setAttribute("selected", "selected");
+        optionNoProject.removeAttribute("selected");
+      } else if (task.priority == "3") {
+        taskPriorityLow.setAttribute("selected", "selected");
+        optionNoProject.removeAttribute("selected");
+      }
+    }
 
     //function that iterates through that list and create options for every one and appends that to the select object
 
@@ -125,13 +147,18 @@ const taskCreateRender = {
         newTaskProject.append(project);
       });
     }
-    createOptions(provideList);
+    createOptions(provideProjectList);
 
     const newTaskDate = document.createElement("input");
     newTaskDate.setAttribute("type", "date");
     newTaskDate.classList.add("newTaskDate");
     if (edit) {
-      newTaskDate.value = task.date;
+      const formatedDate = `${task.date.slice(6)}-${task.date.slice(
+        3,
+        5
+      )}-${task.date.slice(0, 2)}`;
+
+      newTaskDate.value = formatedDate;
     }
 
     document.querySelector(".container").append(newTaskContainer);
@@ -158,27 +185,42 @@ const taskCreateRender = {
     newTaskOptions.append(newTaskDate);
     newTaskOptions.prepend(taskPriority);
   },
-  // send data to list before closing the pop up pop-up (object with( name, color, notes, prio, date, poject, prevName ))
 
-  getNewTaskData: function () {
+  getTaskData: function () {
     document.addEventListener("click", (e) => {
       if (e.target.classList.contains("newTaskSubmit")) {
-        const newTask = {
-          name: document.querySelector(".newTaskNameColor > input[type='text'")
-            .value,
+        if (this.taskPrevName == "") {
+          const newTask = {
+            name: document.querySelector(
+              ".newTaskNameColor > input[type='text'"
+            ).value,
 
-          color: document.querySelector(
-            ".newTaskNameColor > input[type='color'"
-          ).value,
-          notes: document.querySelector(".newTaskNotes").value,
-          priority: document.querySelector(".taskPriority").value,
-          project: document.querySelector(".newTaskProject").value,
-          date: document.querySelector(".newTaskDate").value,
-        };
+            color: document.querySelector(
+              ".newTaskNameColor > input[type='color'"
+            ).value,
+            notes: document.querySelector(".newTaskNotes").value,
+            priority: document.querySelector(".taskPriority").value,
+            project: document.querySelector(".newTaskProject").value,
+            date: document.querySelector(".newTaskDate").value,
+          };
+          this.sendNewTaskData(newTask);
+        } else if (this.taskPrevName !== "") {
+          const newTask = {
+            name: document.querySelector(
+              ".newTaskNameColor > input[type='text'"
+            ).value,
 
-        this.sendNewTaskData(newTask);
-
-        // gets data from projectListHandler
+            color: document.querySelector(
+              ".newTaskNameColor > input[type='color'"
+            ).value,
+            notes: document.querySelector(".newTaskNotes").value,
+            priority: document.querySelector(".taskPriority").value,
+            project: document.querySelector(".newTaskProject").value,
+            date: document.querySelector(".newTaskDate").value,
+            prevName: this.taskPrevName,
+          };
+          this.sendNewTaskData(newTask);
+        }
       }
     });
   },
@@ -186,7 +228,6 @@ const taskCreateRender = {
     Pubsub.publish("newTask", [newTask]);
   },
 
-  //funtion that can close the pop up
   closePopUpWindow: function () {
     document.addEventListener("click", (e) => {
       if (e.target.classList.contains("newTaskSubmit")) {

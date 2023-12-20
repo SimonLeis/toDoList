@@ -6,10 +6,11 @@
 .container {
   width: 80vw;
   height: 90vh;
-  border: 1px grey solid;
+
   margin: 0 auto;
   margin-top: 5rem;
-  border-radius: 2rem;
+
+  border: 10px solid grey;
 
   display: grid;
   grid-template-columns: repeat(6, 1fr);

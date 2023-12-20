@@ -14,19 +14,18 @@ const taskListHandler = {
   // edits task based on previus name and triggers the reordering function
 
   editTask: function (task) {
-    const taskToEdit = this.taskList.filter((element) => {
+    this.taskList.forEach((element) => {
       if (element.name == task.prevName) {
-        return element;
+        (element.name = task.name),
+          (element.color = task.color),
+          (element.notes = task.notes),
+          (element.priority = task.priority),
+          (element.project = task.project),
+          (element.date = task.date);
       }
-
-      taskToEdit.name = task.name;
-      taskToEdit.color = task.color;
-      taskToEdit.date = task.date;
-      taskToEdit.project = task.project;
-      taskToEdit.priority = task.priority;
-
-      this.reorderTaskList();
     });
+
+    this.reorderTaskList();
   },
 
   //pushes task into the array and triggers the reorderung function
@@ -77,10 +76,14 @@ Pubsub.subscribe("taskListNeeded", function () {
   taskListHandler.publishList();
 });
 
+// if a task gets deletes this will trigger the reordering of the list
+
 Pubsub.subscribe("deleteTask", function (taskName) {
   taskListHandler.deleteTask(taskName);
 });
 
 export default taskListHandler.init;
-//SEND
-//new ordered and added task list every time a task was edited or created
+
+export function provideTaskList() {
+  return taskListHandler.taskList;
+}
